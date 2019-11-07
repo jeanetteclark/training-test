@@ -1,7 +1,7 @@
 ---
 title: "Data Tidying"
 author: "Jeanette Clark"
-date: "11/6/2019"
+date: "11/7/2019"
 output: html_document
 ---
 
@@ -14,174 +14,40 @@ library(dplyr)
 library(tidyr)
 ```
 
-package_name::function_name(...)
 
-obj <- stats::filter(x)
-
-# Read and Clean Data
+Data sourced from: Mike Byerly. Alaska commercial salmon catches by management region (1886- 1997). Gulf of Alaska Data Portal. [df35b.304.2](https://knb.ecoinformatics.org/#view/df35b.304.2)
 
 ```{r}
-catch_original <- read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1",
-                               method = "libcurl"),
-                           stringsAsFactors = FALSE)
+catch_original <- read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.302.1", method = "libcurl"),
+                  stringsAsFactors = FALSE)
 
-head(catch_original)
+region_defs <- read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.303.1", method = "libcurl"),
+                        stringsAsFactors = FALSE) %>% 
+    select(code, mgmtArea)
 ```
 
-Remove `all` column and `notes` column because we don't need them.
+Fix an OCR error where a 1 was recorded as an I in the dataset, move from wide to long format, and convert catch column to be in number of fish.
 
 ```{r}
-catch_data <- catch_original %>% 
-  # select(Region, Year, Chinook, Sockeye, Coho, Pink, Chum)
-  select(-All, -notesRegCode)
+catch_long <- catch_original %>%
+  select(-All, -notesRegCode) %>% 
+  # change capital I to 1 because of OCR error
+  mutate(Chinook = ifelse(Chinook == "I", 1, Chinook)) %>% 
+  # coerce Chinook to numeric type
+  mutate(Chinook = as.numeric(Chinook)) %>% 
+  pivot_longer(-c(Region, Year), names_to = "species", values_to = "catch") %>%
+  mutate(catch = catch*1000)
 
-head(catch_data)
+catch_joined <- left_join(catch_long, region_defs, by = c("Region" = "code"))
 ```
 
-```{r}
-summary(catch_data)
-```
-
-## Fix Chinook Column
-
-Use `mutate` to fix Chinook column
-
-```{r}
-catch_clean <- catch_data %>%
-  mutate(Chinook = ifelse(Chinook == "I", 1, Chinook)) %>%
-  mutate(Chinook = as.numeric(Chinook))
-
-```
-
-Finding the rows that got turned into NA
-
-```{r}
-i <- which(is.na(catch_clean$Chinook))
-i
-```
-
-```{r}
-catch_original[i, ]
-```
-
-
-# Reshape Data
-
-```{r}
-catch_long <- catch_clean %>% 
-  pivot_longer(cols = -c(Region, Year),
-               names_to = "species",
-               values_to = "count")
-
-head(catch_long)
-```
-
-```{r}
-catch_wide <- catch_long %>% 
-  pivot_wider(names_from = Year,
-              values_from = count)
-
-head(catch_wide)
-```
-
-`rename` count column to `catch_thousands`
-
-```{r}
-catch_long <- catch_long %>% 
-  rename(catch_thousands = count)
-
-head(catch_long)
-```
-
-```{r}
-catch_long <- catch_long %>% 
-  mutate(catch = catch_thousands * 1000) %>% 
-  select(-catch_thousands)
-
-head(catch_long)
-```
-
-
-
-# Summarize Data
+Calculate mean catch by region
 
 ```{r}
 mean_region <- catch_long %>% 
-  group_by(Region, species) %>% 
-  summarize(catch_mean = mean(catch),
-            num_obs = n())
+  group_by(Region) %>% 
+  summarize(mean_catch = mean(catch))
 
-mean_region
-```
-
-Calculate total catch per species
-What is the most commonly caught species?
-
-```{r}
-total_species <- catch_long %>% 
-  group_by(species) %>% 
-  summarise(total = sum(catch)) %>% 
-  arrange(desc(total))
-
-total_species
-```
-
-```{r}
-total_species_pre_1900 <- catch_long %>% 
-  filter(Year < 1900) %>% 
-  group_by(species) %>% 
-  summarise(total = sum(catch)) %>% 
-  arrange(desc(total))
-
-total_species_pre_1900
-```
-
-
-# Join to Region Table
-
-Read in region data table
-
-```{r}
-region_defs <- read.csv(url("https://knb.ecoinformatics.org/knb/d1/mn/v2/object/df35b.303.1",
-                            method = "libcurl"),
-                        stringsAsFactors = F) %>% 
-  select(code, mgmtArea) %>% 
-  rename(Region = code)
-
-head(region_defs)
-```
-
-```{r}
-# catch_joined <- left_join(catch_long, region_defs, by = c("Region" = "code"))
-
-catch_joined <- left_join(catch_long, region_defs, by = "Region")
-
-head(catch_joined)
-```
-
-# Separate and Unite
-
-```{r}
-site_codes <- data.frame(site = c("HAW-100",
-                                  "HAW-101",
-                                  "OAH-102",
-                                  "OAH-103",
-                                  "MAI-100"),
-                         stringsAsFactors = F)
-```
-
-separate island and site number using `separate`
-
-```{r}
-site_codes_split <- site_codes %>% 
-  separate(site, into = c("island", "site_num"), sep = "-", remove = F)
-
-site_codes_split
-```
-```{r}
-united <- site_codes_split %>%
-  unite(col = site_code, island, site_num, sep = "_")
-
-united
+head(mean_region)
 ```
 
