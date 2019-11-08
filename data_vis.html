@@ -2603,6 +2603,15 @@ padding-right: inherit;
 </style>
 <script>!function a(b,c,d){function e(g,h){if(!c[g]){if(!b[g]){var i="function"==typeof require&&require;if(!h&&i)return i(g,!0);if(f)return f(g,!0);var j=new Error("Cannot find module '"+g+"'");throw j.code="MODULE_NOT_FOUND",j}var k=c[g]={exports:{}};b[g][0].call(k.exports,function(a){var c=b[g][1][a];return e(c?c:a)},k,k.exports,a,b,c,d)}return c[g].exports}for(var f="function"==typeof require&&require,g=0;g<d.length;g++)e(d[g]);return e}({1:[function(a,b,c){"use strict";function d(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(c,"__esModule",{value:!0});var e=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),f=function(){function a(){d(this,a),this._types={},this._seq=0}return e(a,[{key:"on",value:function(a,b){var c=this._types[a];c||(c=this._types[a]={});var d="sub"+this._seq++;return c[d]=b,d}},{key:"off",value:function(a,b){var c=this._types[a];if("function"==typeof b){for(var d in c)if(c.hasOwnProperty(d)&&c[d]===b)return delete c[d],d;return!1}if("string"==typeof b)return!(!c||!c[b])&&(delete c[b],b);throw new Error("Unexpected type for listener")}},{key:"trigger",value:function(a,b,c){var d=this._types[a];for(var e in d)d.hasOwnProperty(e)&&d[e].call(c,b)}}]),a}();c.default=f},{}],2:[function(a,b,c){"use strict";function d(a){if(a&&a.__esModule)return a;var b={};if(null!=a)for(var c in a)Object.prototype.hasOwnProperty.call(a,c)&&(b[c]=a[c]);return b.default=a,b}function e(a){return a&&a.__esModule?a:{default:a}}function f(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}function g(a){var b=a.var("filterset"),c=b.get();return c||(c=new m.default,b.set(c)),c}function h(){return r++}Object.defineProperty(c,"__esModule",{value:!0}),c.FilterHandle=void 0;var i=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),j=a("./events"),k=e(j),l=a("./filterset"),m=e(l),n=a("./group"),o=e(n),p=a("./util"),q=d(p),r=1;c.FilterHandle=function(){function a(b,c){f(this,a),this._eventRelay=new k.default,this._emitter=new q.SubscriptionTracker(this._eventRelay),this._group=null,this._filterSet=null,this._filterVar=null,this._varOnChangeSub=null,this._extraInfo=q.extend({sender:this},c),this._id="filter"+h(),this.setGroup(b)}return i(a,[{key:"setGroup",value:function(a){var b=this;if(this._group!==a&&(this._group||a)&&(this._filterVar&&(this._filterVar.off("change",this._varOnChangeSub),this.clear(),this._varOnChangeSub=null,this._filterVar=null,this._filterSet=null),this._group=a,a)){a=(0,o.default)(a),this._filterSet=g(a),this._filterVar=(0,o.default)(a).var("filter");var c=this._filterVar.on("change",function(a){b._eventRelay.trigger("change",a,b)});this._varOnChangeSub=c}}},{key:"_mergeExtraInfo",value:function(a){return q.extend({},this._extraInfo?this._extraInfo:null,a?a:null)}},{key:"close",value:function(){this._emitter.removeAllListeners(),this.clear(),this.setGroup(null)}},{key:"clear",value:function(a){this._filterSet&&(this._filterSet.clear(this._id),this._onChange(a))}},{key:"set",value:function(a,b){this._filterSet&&(this._filterSet.update(this._id,a),this._onChange(b))}},{key:"on",value:function(a,b){return this._emitter.on(a,b)}},{key:"off",value:function(a,b){return this._emitter.off(a,b)}},{key:"_onChange",value:function(a){this._filterSet&&this._filterVar.set(this._filterSet.value,this._mergeExtraInfo(a))}},{key:"filteredKeys",get:function(){return this._filterSet?this._filterSet.value:null}}]),a}()},{"./events":1,"./filterset":3,"./group":4,"./util":11}],3:[function(a,b,c){"use strict";function d(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}function e(a,b){return a===b?0:a<b?-1:a>b?1:void 0}Object.defineProperty(c,"__esModule",{value:!0});var f=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),g=a("./util"),h=function(){function a(){d(this,a),this.reset()}return f(a,[{key:"reset",value:function(){this._handles={},this._keys={},this._value=null,this._activeHandles=0}},{key:"update",value:function(a,b){null!==b&&(b=b.slice(0),b.sort(e));var c=(0,g.diffSortedLists)(this._handles[a],b),d=c.added,f=c.removed;this._handles[a]=b;for(var h=0;h<d.length;h++)this._keys[d[h]]=(this._keys[d[h]]||0)+1;for(var i=0;i<f.length;i++)this._keys[f[i]]--;this._updateValue(b)}},{key:"_updateValue",value:function(){var a=arguments.length>0&&void 0!==arguments[0]?arguments[0]:this._allKeys,b=Object.keys(this._handles).length;if(0===b)this._value=null;else{this._value=[];for(var c=0;c<a.length;c++){var d=this._keys[a[c]];d===b&&this._value.push(a[c])}}}},{key:"clear",value:function(a){if("undefined"!=typeof this._handles[a]){var b=this._handles[a];b||(b=[]);for(var c=0;c<b.length;c++)this._keys[b[c]]--;delete this._handles[a],this._updateValue()}}},{key:"value",get:function(){return this._value}},{key:"_allKeys",get:function(){var a=Object.keys(this._keys);return a.sort(e),a}}]),a}();c.default=h},{"./util":11}],4:[function(a,b,c){(function(b){"use strict";function d(a){return a&&a.__esModule?a:{default:a}}function e(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}function f(a){if(a&&"string"==typeof a)return k.hasOwnProperty(a)||(k[a]=new l(a)),k[a];if("object"===("undefined"==typeof a?"undefined":h(a))&&a._vars&&a.var)return a;if(Array.isArray(a)&&1==a.length&&"string"==typeof a[0])return f(a[0]);throw new Error("Invalid groupName argument")}Object.defineProperty(c,"__esModule",{value:!0});var g=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),h="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&"function"==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?"symbol":typeof a};c.default=f;var i=a("./var"),j=d(i);b.__crosstalk_groups=b.__crosstalk_groups||{};var k=b.__crosstalk_groups,l=function(){function a(b){e(this,a),this.name=b,this._vars={}}return g(a,[{key:"var",value:function(a){if(!a||"string"!=typeof a)throw new Error("Invalid var name");return this._vars.hasOwnProperty(a)||(this._vars[a]=new j.default(this,a)),this._vars[a]}},{key:"has",value:function(a){if(!a||"string"!=typeof a)throw new Error("Invalid var name");return this._vars.hasOwnProperty(a)}}]),a}()}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./var":12}],5:[function(a,b,c){(function(b){"use strict";function d(a){return a&&a.__esModule?a:{default:a}}function e(a){return k.var(a)}function f(a){return k.has(a)}Object.defineProperty(c,"__esModule",{value:!0});var g=a("./group"),h=d(g),i=a("./selection"),j=a("./filter");a("./input"),a("./input_selectize"),a("./input_checkboxgroup"),a("./input_slider");var k=(0,h.default)("default");b.Shiny&&b.Shiny.addCustomMessageHandler("update-client-value",function(a){"string"==typeof a.group?(0,h.default)(a.group).var(a.name).set(a.value):e(a.name).set(a.value)});var l={group:h.default,var:e,has:f,SelectionHandle:i.SelectionHandle,FilterHandle:j.FilterHandle};c.default=l,b.crosstalk=l}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./filter":2,"./group":4,"./input":6,"./input_checkboxgroup":7,"./input_selectize":8,"./input_slider":9,"./selection":10}],6:[function(a,b,c){(function(a){"use strict";function b(b){i[b.className]=b,a.document&&"complete"!==a.document.readyState?h(function(){d()}):a.document&&setTimeout(d,100)}function d(){Object.keys(i).forEach(function(a){var b=i[a];h("."+b.className).not(".crosstalk-input-bound").each(function(a,c){g(b,c)})})}function e(a){return a.replace(/([!"#$%&'()*+,.\/:;<=>?@\[\\\]^`{|}~])/g,"\\$1")}function f(a){var b=h(a);Object.keys(i).forEach(function(c){if(b.hasClass(c)&&!b.hasClass("crosstalk-input-bound")){var d=i[c];g(d,a)}})}function g(a,b){var c=h(b).find("script[type='application/json'][data-for='"+e(b.id)+"']"),d=JSON.parse(c[0].innerText),f=a.factory(b,d);h(b).data("crosstalk-instance",f),h(b).addClass("crosstalk-input-bound")}Object.defineProperty(c,"__esModule",{value:!0}),c.register=b;var h=a.jQuery,i={};a.Shiny&&!function(){var b=new a.Shiny.InputBinding,c=a.jQuery;c.extend(b,{find:function(a){return c(a).find(".crosstalk-input")},initialize:function(a){c(a).hasClass("crosstalk-input-bound")||f(a)},getId:function(a){return a.id},getValue:function(a){},setValue:function(a,b){},receiveMessage:function(a,b){},subscribe:function(a,b){c(a).data("crosstalk-instance").resume()},unsubscribe:function(a){c(a).data("crosstalk-instance").suspend()}}),a.Shiny.inputBindings.register(b,"crosstalk.inputBinding")}()}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],7:[function(a,b,c){(function(b){"use strict";function c(a){if(a&&a.__esModule)return a;var b={};if(null!=a)for(var c in a)Object.prototype.hasOwnProperty.call(a,c)&&(b[c]=a[c]);return b.default=a,b}var d=a("./input"),e=c(d),f=a("./filter"),g=b.jQuery;e.register({className:"crosstalk-input-checkboxgroup",factory:function(a,b){var c=new f.FilterHandle(b.group),d=void 0,e=g(a);return e.on("change","input[type='checkbox']",function(){var a=e.find("input[type='checkbox']:checked");0===a.length?(d=null,c.clear()):!function(){var e={};a.each(function(){b.map[this.value].forEach(function(a){e[a]=!0})});var f=Object.keys(e);f.sort(),d=f,c.set(f)}()}),{suspend:function(){c.clear()},resume:function(){d&&c.set(d)}}}})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./filter":2,"./input":6}],8:[function(a,b,c){(function(b){"use strict";function c(a){if(a&&a.__esModule)return a;var b={};if(null!=a)for(var c in a)Object.prototype.hasOwnProperty.call(a,c)&&(b[c]=a[c]);return b.default=a,b}var d=a("./input"),e=c(d),f=a("./util"),g=c(f),h=a("./filter"),i=b.jQuery;e.register({className:"crosstalk-input-select",factory:function(a,b){var c=[{value:"",label:"(All)"}],d=g.dataframeToD3(b.items),e={options:c.concat(d),valueField:"value",labelField:"label",searchField:"label"},f=i(a).find("select")[0],j=i(f).selectize(e)[0].selectize,k=new h.FilterHandle(b.group),l=void 0;return j.on("change",function(){0===j.items.length?(l=null,k.clear()):!function(){var a={};j.items.forEach(function(c){b.map[c].forEach(function(b){a[b]=!0})});var c=Object.keys(a);c.sort(),l=c,k.set(c)}()}),{suspend:function(){k.clear()},resume:function(){l&&k.set(l)}}}})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./filter":2,"./input":6,"./util":11}],9:[function(a,b,c){(function(b){"use strict";function c(a){if(a&&a.__esModule)return a;var b={};if(null!=a)for(var c in a)Object.prototype.hasOwnProperty.call(a,c)&&(b[c]=a[c]);return b.default=a,b}function d(a,b){for(var c=a.toString();c.length<b;)c="0"+c;return c}function e(a){return a instanceof Date?a.getUTCFullYear()+"-"+d(a.getUTCMonth()+1,2)+"-"+d(a.getUTCDate(),2):null}var f=function(){function a(a,b){var c=[],d=!0,e=!1,f=void 0;try{for(var g,h=a[Symbol.iterator]();!(d=(g=h.next()).done)&&(c.push(g.value),!b||c.length!==b);d=!0);}catch(a){e=!0,f=a}finally{try{!d&&h.return&&h.return()}finally{if(e)throw f}}return c}return function(b,c){if(Array.isArray(b))return b;if(Symbol.iterator in Object(b))return a(b,c);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),g=a("./input"),h=c(g),i=a("./filter"),j=b.jQuery,k=b.strftime;h.register({className:"crosstalk-input-slider",factory:function(a,b){function c(){var a=h.data("ionRangeSlider").result,b=void 0,c=h.data("data-type");return b="date"===c?function(a){return e(new Date(+a))}:"datetime"===c?function(a){return+a/1e3}:function(a){return+a},"double"===h.data("ionRangeSlider").options.type?[b(a.from),b(a.to)]:b(a.from)}var d=new i.FilterHandle(b.group),g={},h=j(a).find("input"),l=h.data("data-type"),m=h.data("time-format"),n=void 0;if("date"===l)n=k.utc(),g.prettify=function(a){return n(m,new Date(a))};else if("datetime"===l){var o=h.data("timezone");n=o?k.timezone(o):k,g.prettify=function(a){return n(m,new Date(a))}}h.ionRangeSlider(g);var p=null;return h.on("change.crosstalkSliderInput",function(a){if(!h.data("updating")&&!h.data("animating")){for(var e=c(),g=f(e,2),i=g[0],j=g[1],k=[],l=0;l<b.values.length;l++){var m=b.values[l];m>=i&&m<=j&&k.push(b.keys[l])}k.sort(),d.set(k),p=k}}),{suspend:function(){d.clear()},resume:function(){p&&d.set(p)}}}})}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./filter":2,"./input":6}],10:[function(a,b,c){"use strict";function d(a){if(a&&a.__esModule)return a;var b={};if(null!=a)for(var c in a)Object.prototype.hasOwnProperty.call(a,c)&&(b[c]=a[c]);return b.default=a,b}function e(a){return a&&a.__esModule?a:{default:a}}function f(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(c,"__esModule",{value:!0}),c.SelectionHandle=void 0;var g=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),h=a("./events"),i=e(h),j=a("./group"),k=e(j),l=a("./util"),m=d(l);c.SelectionHandle=function(){function a(){var b=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null,c=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;f(this,a),this._eventRelay=new i.default,this._emitter=new m.SubscriptionTracker(this._eventRelay),this._group=null,this._var=null,this._varOnChangeSub=null,this._extraInfo=m.extend({sender:this},c),this.setGroup(b)}return g(a,[{key:"setGroup",value:function(a){var b=this;if(this._group!==a&&(this._group||a)&&(this._var&&(this._var.off("change",this._varOnChangeSub),this._var=null,this._varOnChangeSub=null),this._group=a,a)){this._var=(0,k.default)(a).var("selection");var c=this._var.on("change",function(a){b._eventRelay.trigger("change",a,b)});this._varOnChangeSub=c}}},{key:"_mergeExtraInfo",value:function(a){return m.extend({},this._extraInfo?this._extraInfo:null,a?a:null)}},{key:"set",value:function(a,b){this._var&&this._var.set(a,this._mergeExtraInfo(b))}},{key:"clear",value:function(a){this._var&&this.set(void 0,this._mergeExtraInfo(a))}},{key:"on",value:function(a,b){return this._emitter.on(a,b)}},{key:"off",value:function(a,b){return this._emitter.off(a,b)}},{key:"close",value:function(){this._emitter.removeAllListeners(),this.setGroup(null)}},{key:"value",get:function(){return this._var?this._var.get():null}}]),a}()},{"./events":1,"./group":4,"./util":11}],11:[function(a,b,c){"use strict";function d(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}function e(a){for(var b=arguments.length,c=Array(b>1?b-1:0),d=1;d<b;d++)c[d-1]=arguments[d];for(var e=0;e<c.length;e++){var f=c[e];if("undefined"!=typeof f&&null!==f)for(var g in f)f.hasOwnProperty(g)&&(a[g]=f[g])}return a}function f(a){for(var b=1;b<a.length;b++)if(a[b]<=a[b-1])throw new Error("List is not sorted or contains duplicate")}function g(a,b){var c=0,d=0;a||(a=[]),b||(b=[]);var e=[],g=[];for(f(a),f(b);c<a.length&&d<b.length;)a[c]===b[d]?(c++,d++):a[c]<b[d]?e.push(a[c++]):g.push(b[d++]);return c<a.length&&(e=e.concat(a.slice(c))),d<b.length&&(g=g.concat(b.slice(d))),{removed:e,added:g}}function h(a){var b=[],c=void 0;for(var d in a){if(a.hasOwnProperty(d)&&b.push(d),"object"!==j(a[d])||"undefined"==typeof a[d].length)throw new Error("All fields must be arrays");if("undefined"!=typeof c&&c!==a[d].length)throw new Error("All fields must be arrays of the same length");c=a[d].length}for(var e=[],f=void 0,g=0;g<c;g++){f={};for(var h=0;h<b.length;h++)f[b[h]]=a[b[h]][g];e.push(f)}return e}Object.defineProperty(c,"__esModule",{value:!0});var i=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),j="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&"function"==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?"symbol":typeof a};c.extend=e,c.checkSorted=f,c.diffSortedLists=g,c.dataframeToD3=h;c.SubscriptionTracker=function(){function a(b){d(this,a),this._emitter=b,this._subs={}}return i(a,[{key:"on",value:function(a,b){var c=this._emitter.on(a,b);return this._subs[c]=a,c}},{key:"off",value:function(a,b){var c=this._emitter.off(a,b);return c&&delete this._subs[c],c}},{key:"removeAllListeners",value:function(){var a=this,b=this._subs;this._subs={},Object.keys(b).forEach(function(c){a._emitter.off(b[c],c)})}}]),a}()},{}],12:[function(a,b,c){(function(b){"use strict";function d(a){return a&&a.__esModule?a:{default:a}}function e(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(c,"__esModule",{value:!0});var f="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(a){return typeof a}:function(a){return a&&"function"==typeof Symbol&&a.constructor===Symbol&&a!==Symbol.prototype?"symbol":typeof a},g=function(){function a(a,b){for(var c=0;c<b.length;c++){var d=b[c];d.enumerable=d.enumerable||!1,d.configurable=!0,"value"in d&&(d.writable=!0),Object.defineProperty(a,d.key,d)}}return function(b,c,d){return c&&a(b.prototype,c),d&&a(b,d),b}}(),h=a("./events"),i=d(h),j=function(){function a(b,c,d){e(this,a),this._group=b,this._name=c,this._value=d,this._events=new i.default}return g(a,[{key:"get",value:function(){return this._value}},{key:"set",value:function(a,c){if(this._value!==a){var d=this._value;this._value=a;var e={};if(c&&"object"===("undefined"==typeof c?"undefined":f(c)))for(var g in c)c.hasOwnProperty(g)&&(e[g]=c[g]);e.oldValue=d,e.value=a,this._events.trigger("change",e,this),b.Shiny&&b.Shiny.onInputChange&&b.Shiny.onInputChange(".clientValue-"+(null!==this._group.name?this._group.name+"-":"")+this._name,"undefined"==typeof a?null:a)}}},{key:"on",value:function(a,b){return this._events.on(a,b)}},{key:"off",value:function(a,b){return this._events.off(a,b)}}]),a}();c.default=j}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./events":1}]},{},[5]);
 //# sourceMappingURL=crosstalk.min.js.map</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
 <style type="text/css">.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane > svg,.leaflet-pane > canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer {position: absolute;left: 0;top: 0;}.leaflet-container {overflow: hidden;}.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow {-webkit-user-select: none;-moz-user-select: none;user-select: none;-webkit-user-drag: none;}.leaflet-safari .leaflet-tile {image-rendering: -webkit-optimize-contrast;}.leaflet-safari .leaflet-tile-container {width: 1600px;height: 1600px;-webkit-transform-origin: 0 0;}.leaflet-marker-icon,.leaflet-marker-shadow {display: block;}.leaflet-container .leaflet-overlay-pane svg,.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer {max-width: none !important;max-height: none !important;}.leaflet-container.leaflet-touch-zoom {-ms-touch-action: pan-x pan-y;touch-action: pan-x pan-y;}.leaflet-container.leaflet-touch-drag {-ms-touch-action: pinch-zoom;touch-action: none;touch-action: pinch-zoom;}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {-ms-touch-action: none;touch-action: none;}.leaflet-container {-webkit-tap-highlight-color: transparent;}.leaflet-container a {-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);}.leaflet-tile {filter: inherit;visibility: hidden;}.leaflet-tile-loaded {visibility: inherit;}.leaflet-zoom-box {width: 0;height: 0;-moz-box-sizing: border-box;box-sizing: border-box;z-index: 800;}.leaflet-overlay-pane svg {-moz-user-select: none;}.leaflet-pane { z-index: 400; }.leaflet-tile-pane { z-index: 200; }.leaflet-overlay-pane { z-index: 400; }.leaflet-shadow-pane { z-index: 500; }.leaflet-marker-pane { z-index: 600; }.leaflet-tooltip-pane { z-index: 650; }.leaflet-popup-pane { z-index: 700; }.leaflet-map-pane canvas { z-index: 100; }.leaflet-map-pane svg { z-index: 200; }.leaflet-vml-shape {width: 1px;height: 1px;}.lvml {behavior: url(#default#VML);display: inline-block;position: absolute;}.leaflet-control {position: relative;z-index: 800;pointer-events: visiblePainted; pointer-events: auto;}.leaflet-top,.leaflet-bottom {position: absolute;z-index: 1000;pointer-events: none;}.leaflet-top {top: 0;}.leaflet-right {right: 0;}.leaflet-bottom {bottom: 0;}.leaflet-left {left: 0;}.leaflet-control {float: left;clear: both;}.leaflet-right .leaflet-control {float: right;}.leaflet-top .leaflet-control {margin-top: 10px;}.leaflet-bottom .leaflet-control {margin-bottom: 10px;}.leaflet-left .leaflet-control {margin-left: 10px;}.leaflet-right .leaflet-control {margin-right: 10px;}.leaflet-fade-anim .leaflet-tile {will-change: opacity;}.leaflet-fade-anim .leaflet-popup {opacity: 0;-webkit-transition: opacity 0.2s linear;-moz-transition: opacity 0.2s linear;-o-transition: opacity 0.2s linear;transition: opacity 0.2s linear;}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {opacity: 1;}.leaflet-zoom-animated {-webkit-transform-origin: 0 0;-ms-transform-origin: 0 0;transform-origin: 0 0;}.leaflet-zoom-anim .leaflet-zoom-animated {will-change: transform;}.leaflet-zoom-anim .leaflet-zoom-animated {-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);-moz-transition: -moz-transform 0.25s cubic-bezier(0,0,0.25,1);-o-transition: -o-transform 0.25s cubic-bezier(0,0,0.25,1);transition: transform 0.25s cubic-bezier(0,0,0.25,1);}.leaflet-zoom-anim .leaflet-tile,.leaflet-pan-anim .leaflet-tile {-webkit-transition: none;-moz-transition: none;-o-transition: none;transition: none;}.leaflet-zoom-anim .leaflet-zoom-hide {visibility: hidden;}.leaflet-interactive {cursor: pointer;}.leaflet-grab {cursor: -webkit-grab;cursor: -moz-grab;}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive {cursor: crosshair;}.leaflet-popup-pane,.leaflet-control {cursor: auto;}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable {cursor: move;cursor: -webkit-grabbing;cursor: -moz-grabbing;}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-image-layer,.leaflet-pane > svg path,.leaflet-tile-container {pointer-events: none;}.leaflet-marker-icon.leaflet-interactive,.leaflet-image-layer.leaflet-interactive,.leaflet-pane > svg path.leaflet-interactive {pointer-events: visiblePainted; pointer-events: auto;}.leaflet-container {background: #ddd;outline: 0;}.leaflet-container a {color: #0078A8;}.leaflet-container a.leaflet-active {outline: 2px solid orange;}.leaflet-zoom-box {border: 2px dotted #38f;background: rgba(255,255,255,0.5);}.leaflet-container {font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;}.leaflet-bar {box-shadow: 0 1px 5px rgba(0,0,0,0.65);border-radius: 4px;}.leaflet-bar a,.leaflet-bar a:hover {background-color: #fff;border-bottom: 1px solid #ccc;width: 26px;height: 26px;line-height: 26px;display: block;text-align: center;text-decoration: none;color: black;}.leaflet-bar a,.leaflet-control-layers-toggle {background-position: 50% 50%;background-repeat: no-repeat;display: block;}.leaflet-bar a:hover {background-color: #f4f4f4;}.leaflet-bar a:first-child {border-top-left-radius: 4px;border-top-right-radius: 4px;}.leaflet-bar a:last-child {border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;border-bottom: none;}.leaflet-bar a.leaflet-disabled {cursor: default;background-color: #f4f4f4;color: #bbb;}.leaflet-touch .leaflet-bar a {width: 30px;height: 30px;line-height: 30px;}.leaflet-touch .leaflet-bar a:first-child {border-top-left-radius: 2px;border-top-right-radius: 2px;}.leaflet-touch .leaflet-bar a:last-child {border-bottom-left-radius: 2px;border-bottom-right-radius: 2px;}.leaflet-control-zoom-in,.leaflet-control-zoom-out {font: bold 18px 'Lucida Console', Monaco, monospace;text-indent: 1px;}.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {font-size: 22px;}.leaflet-control-layers {box-shadow: 0 1px 5px rgba(0,0,0,0.4);background: #fff;border-radius: 5px;}.leaflet-control-layers-toggle {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAQAAAADQ4RFAAACf0lEQVR4AY1UM3gkARTePdvdoTxXKc+qTl3aU5U6b2Kbkz3Gtq3Zw6ziLGNPzrYx7946Tr6/ee/XeCQ4D3ykPtL5tHno4n0d/h3+xfuWHGLX81cn7r0iTNzjr7LrlxCqPtkbTQEHeqOrTy4Yyt3VCi/IOB0v7rVC7q45Q3Gr5K6jt+3Gl5nCoDD4MtO+j96Wu8atmhGqcNGHObuf8OM/x3AMx38+4Z2sPqzCxRFK2aF2e5Jol56XTLyggAMTL56XOMoS1W4pOyjUcGGQdZxU6qRh7B9Zp+PfpOFlqt0zyDZckPi1ttmIp03jX8gyJ8a/PG2yutpS/Vol7peZIbZcKBAEEheEIAgFbDkz5H6Zrkm2hVWGiXKiF4Ycw0RWKdtC16Q7qe3X4iOMxruonzegJzWaXFrU9utOSsLUmrc0YjeWYjCW4PDMADElpJSSQ0vQvA1Tm6/JlKnqFs1EGyZiFCqnRZTEJJJiKRYzVYzJck2Rm6P4iH+cmSY0YzimYa8l0EtTODFWhcMIMVqdsI2uiTvKmTisIDHJ3od5GILVhBCarCfVRmo4uTjkhrhzkiBV7SsaqS+TzrzM1qpGGUFt28pIySQHR6h7F6KSwGWm97ay+Z+ZqMcEjEWebE7wxCSQwpkhJqoZA5ivCdZDjJepuJ9IQjGGUmuXJdBFUygxVqVsxFsLMbDe8ZbDYVCGKxs+W080max1hFCarCfV+C1KATwcnvE9gRRuMP2prdbWGowm1KB1y+zwMMENkM755cJ2yPDtqhTI6ED1M/82yIDtC/4j4BijjeObflpO9I9MwXTCsSX8jWAFeHr05WoLTJ5G8IQVS/7vwR6ohirYM7f6HzYpogfS3R2OAAAAAElFTkSuQmCC);width: 36px;height: 36px;}.leaflet-retina .leaflet-control-layers-toggle {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA0CAQAAABvcdNgAAAEsklEQVR4AWL4TydIhpZK1kpWOlg0w3ZXP6D2soBtG42jeI6ZmQTHzAxiTbSJsYLjO9HhP+WOmcuhciVnmHVQcJnp7DFvScowZorad/+V/fVzMdMT2g9Cv9guXGv/7pYOrXh2U+RRR3dSd9JRx6bIFc/ekqHI29JC6pJ5ZEh1yWkhkbcFeSjxgx3L2m1cb1C7bceyxA+CNjT/Ifff+/kDk2u/w/33/IeCMOSaWZ4glosqT3DNnNZQ7Cs58/3Ce5HL78iZH/vKVIaYlqzfdLu8Vi7dnvUbEza5Idt36tquZFldl6N5Z/POLof0XLK61mZCmJSWjVF9tEjUluu74IUXvgttuVIHE7YxSkaYhJZam7yiM9Pv82JYfl9nptxZaxMJE4YSPty+vF0+Y2up9d3wwijfjZbabqm/3bZ9ecKHsiGmRflnn1MW4pjHf9oLufyn2z3y1D6n8g8TZhxyzipLNPnAUpsOiuWimg52psrTZYnOWYNDTMuWBWa0tJb4rgq1UvmutpaYEbZlwU3CLJm/ayYjHW5/h7xWLn9Hh1vepDkyf7dE7MtT5LR4e7yYpHrkhOUpEfssBLq2pPhAqoSWKUkk7EDqkmK6RrCEzqDjhNDWNE+XSMvkJRDWlZTmCW0l0PHQGRZY5t1L83kT0Y3l2SItk5JAWHl2dCOBm+fPu3fo5/3v61RMCO9Jx2EEYYhb0rmNQMX/vm7gqOEJLcXTGw3CAuRNeyaPWwjR8PRqKQ1PDA/dpv+on9Shox52WFnx0KY8onHayrJzm87i5h9xGw/tfkev0jGsQizqezUKjk12hBMKJ4kbCqGPVNXudyyrShovGw5CgxsRICxF6aRmSjlBnHRzg7Gx8fKqEubI2rahQYdR1YgDIRQO7JvQyD52hoIQx0mxa0ODtW2Iozn1le2iIRdzwWewedyZzewidueOGqlsn1MvcnQpuVwLGG3/IR1hIKxCjelIDZ8ldqWz25jWAsnldEnK0Zxro19TGVb2ffIZEsIO89EIEDvKMPrzmBOQcKQ+rroye6NgRRxqR4U8EAkz0CL6uSGOm6KQCdWjvjRiSP1BPalCRS5iQYiEIvxuBMJEWgzSoHADcVMuN7IuqqTeyUPq22qFimFtxDyBBJEwNyt6TM88blFHao/6tWWhuuOM4SAK4EI4QmFHA+SEyWlp4EQoJ13cYGzMu7yszEIBOm2rVmHUNqwAIQabISNMRstmdhNWcFLsSm+0tjJH1MdRxO5Nx0WDMhCtgD6OKgZeljJqJKc9po8juskR9XN0Y1lZ3mWjLR9JCO1jRDMd0fpYC2VnvjBSEFg7wBENc0R9HFlb0xvF1+TBEpF68d+DHR6IOWVv2BECtxo46hOFUBd/APU57WIoEwJhIi2CdpyZX0m93BZicktMj1AS9dClteUFAUNUIEygRZCtik5zSxI9MubTBH1GOiHsiLJ3OCoSZkILa9PxiN0EbvhsAo8tdAf9Seepd36lGWHmtNANTv5Jd0z4QYyeo/UEJqxKRpg5LZx6btLPsOaEmdMyxYdlc8LMaJnikDlhclqmPiQnTEpLUIZEwkRagjYkEibQErwhkTAKCLQEbUgkzJQWc/0PstHHcfEdQ+UAAAAASUVORK5CYII=);background-size: 26px 26px;}.leaflet-touch .leaflet-control-layers-toggle {width: 44px;height: 44px;}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle {display: none;}.leaflet-control-layers-expanded .leaflet-control-layers-list {display: block;position: relative;}.leaflet-control-layers-expanded {padding: 6px 10px 6px 6px;color: #333;background: #fff;}.leaflet-control-layers-scrollbar {overflow-y: scroll;overflow-x: hidden;padding-right: 5px;}.leaflet-control-layers-selector {margin-top: 2px;position: relative;top: 1px;}.leaflet-control-layers label {display: block;}.leaflet-control-layers-separator {height: 0;border-top: 1px solid #ddd;margin: 5px -10px 5px -6px;}.leaflet-default-icon-path {background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAApCAYAAADAk4LOAAAFgUlEQVR4Aa1XA5BjWRTN2oW17d3YaZtr2962HUzbDNpjszW24mRt28p47v7zq/bXZtrp/lWnXr337j3nPCe85NcypgSFdugCpW5YoDAMRaIMqRi6aKq5E3YqDQO3qAwjVWrD8Ncq/RBpykd8oZUb/kaJutow8r1aP9II0WmLKLIsJyv1w/kqw9Ch2MYdB++12Onxee/QMwvf4/Dk/Lfp/i4nxTXtOoQ4pW5Aj7wpici1A9erdAN2OH64x8OSP9j3Ft3b7aWkTg/Fm91siTra0f9on5sQr9INejH6CUUUpavjFNq1B+Oadhxmnfa8RfEmN8VNAsQhPqF55xHkMzz3jSmChWU6f7/XZKNH+9+hBLOHYozuKQPxyMPUKkrX/K0uWnfFaJGS1QPRtZsOPtr3NsW0uyh6NNCOkU3Yz+bXbT3I8G3xE5EXLXtCXbbqwCO9zPQYPRTZ5vIDXD7U+w7rFDEoUUf7ibHIR4y6bLVPXrz8JVZEql13trxwue/uDivd3fkWRbS6/IA2bID4uk0UpF1N8qLlbBlXs4Ee7HLTfV1j54APvODnSfOWBqtKVvjgLKzF5YdEk5ewRkGlK0i33Eofffc7HT56jD7/6U+qH3Cx7SBLNntH5YIPvODnyfIXZYRVDPqgHtLs5ABHD3YzLuespb7t79FY34DjMwrVrcTuwlT55YMPvOBnRrJ4VXTdNnYug5ucHLBjEpt30701A3Ts+HEa73u6dT3FNWwflY86eMHPk+Yu+i6pzUpRrW7SNDg5JHR4KapmM5Wv2E8Tfcb1HoqqHMHU+uWDD7zg54mz5/2BSnizi9T1Dg4QQXLToGNCkb6tb1NU+QAlGr1++eADrzhn/u8Q2YZhQVlZ5+CAOtqfbhmaUCS1ezNFVm2imDbPmPng5wmz+gwh+oHDce0eUtQ6OGDIyR0uUhUsoO3vfDmmgOezH0mZN59x7MBi++WDL1g/eEiU3avlidO671bkLfwbw5XV2P8Pzo0ydy4t2/0eu33xYSOMOD8hTf4CrBtGMSoXfPLchX+J0ruSePw3LZeK0juPJbYzrhkH0io7B3k164hiGvawhOKMLkrQLyVpZg8rHFW7E2uHOL888IBPlNZ1FPzstSJM694fWr6RwpvcJK60+0HCILTBzZLFNdtAzJaohze60T8qBzyh5ZuOg5e7uwQppofEmf2++DYvmySqGBuKaicF1blQjhuHdvCIMvp8whTTfZzI7RldpwtSzL+F1+wkdZ2TBOW2gIF88PBTzD/gpeREAMEbxnJcaJHNHrpzji0gQCS6hdkEeYt9DF/2qPcEC8RM28Hwmr3sdNyht00byAut2k3gufWNtgtOEOFGUwcXWNDbdNbpgBGxEvKkOQsxivJx33iow0Vw5S6SVTrpVq11ysA2Rp7gTfPfktc6zhtXBBC+adRLshf6sG2RfHPZ5EAc4sVZ83yCN00Fk/4kggu40ZTvIEm5g24qtU4KjBrx/BTTH8ifVASAG7gKrnWxJDcU7x8X6Ecczhm3o6YicvsLXWfh3Ch1W0k8x0nXF+0fFxgt4phz8QvypiwCCFKMqXCnqXExjq10beH+UUA7+nG6mdG/Pu0f3LgFcGrl2s0kNNjpmoJ9o4B29CMO8dMT4Q5ox8uitF6fqsrJOr8qnwNbRzv6hSnG5wP+64C7h9lp30hKNtKdWjtdkbuPA19nJ7Tz3zR/ibgARbhb4AlhavcBebmTHcFl2fvYEnW0ox9xMxKBS8btJ+KiEbq9zA4RthQXDhPa0T9TEe69gWupwc6uBUphquXgf+/FrIjweHQS4/pduMe5ERUMHUd9xv8ZR98CxkS4F2n3EUrUZ10EYNw7BWm9x1GiPssi3GgiGRDKWRYZfXlON+dfNbM+GgIwYdwAAAAASUVORK5CYII=);}.leaflet-container .leaflet-control-attribution {background: #fff;background: rgba(255, 255, 255, 0.7);margin: 0;}.leaflet-control-attribution,.leaflet-control-scale-line {padding: 0 5px;color: #333;}.leaflet-control-attribution a {text-decoration: none;}.leaflet-control-attribution a:hover {text-decoration: underline;}.leaflet-container .leaflet-control-attribution,.leaflet-container .leaflet-control-scale {font-size: 11px;}.leaflet-left .leaflet-control-scale {margin-left: 5px;}.leaflet-bottom .leaflet-control-scale {margin-bottom: 5px;}.leaflet-control-scale-line {border: 2px solid #777;border-top: none;line-height: 1.1;padding: 2px 5px 1px;font-size: 11px;white-space: nowrap;overflow: hidden;-moz-box-sizing: border-box;box-sizing: border-box;background: #fff;background: rgba(255, 255, 255, 0.5);}.leaflet-control-scale-line:not(:first-child) {border-top: 2px solid #777;border-bottom: none;margin-top: -2px;}.leaflet-control-scale-line:not(:first-child):not(:last-child) {border-bottom: 2px solid #777;}.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar {box-shadow: none;}.leaflet-touch .leaflet-control-layers,.leaflet-touch .leaflet-bar {border: 2px solid rgba(0,0,0,0.2);background-clip: padding-box;}.leaflet-popup {position: absolute;text-align: center;margin-bottom: 20px;}.leaflet-popup-content-wrapper {padding: 1px;text-align: left;border-radius: 12px;}.leaflet-popup-content {margin: 13px 19px;line-height: 1.4;}.leaflet-popup-content p {margin: 18px 0;}.leaflet-popup-tip-container {width: 40px;height: 20px;position: absolute;left: 50%;margin-left: -20px;overflow: hidden;pointer-events: none;}.leaflet-popup-tip {width: 17px;height: 17px;padding: 1px;margin: -10px auto 0;-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-ms-transform: rotate(45deg);-o-transform: rotate(45deg);transform: rotate(45deg);}.leaflet-popup-content-wrapper,.leaflet-popup-tip {background: white;color: #333;box-shadow: 0 3px 14px rgba(0,0,0,0.4);}.leaflet-container a.leaflet-popup-close-button {position: absolute;top: 0;right: 0;padding: 4px 4px 0 0;border: none;text-align: center;width: 18px;height: 14px;font: 16px/14px Tahoma, Verdana, sans-serif;color: #c3c3c3;text-decoration: none;font-weight: bold;background: transparent;}.leaflet-container a.leaflet-popup-close-button:hover {color: #999;}.leaflet-popup-scrolled {overflow: auto;border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;}.leaflet-oldie .leaflet-popup-content-wrapper {zoom: 1;}.leaflet-oldie .leaflet-popup-tip {width: 24px;margin: 0 auto;-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);}.leaflet-oldie .leaflet-popup-tip-container {margin-top: -1px;}.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip {border: 1px solid #999;}.leaflet-div-icon {background: #fff;border: 1px solid #666;}.leaflet-tooltip {position: absolute;padding: 6px;background-color: #fff;border: 1px solid #fff;border-radius: 3px;color: #222;white-space: nowrap;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;pointer-events: none;box-shadow: 0 1px 3px rgba(0,0,0,0.4);}.leaflet-tooltip.leaflet-clickable {cursor: pointer;pointer-events: auto;}.leaflet-tooltip-top:before,.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before {position: absolute;pointer-events: none;border: 6px solid transparent;background: transparent;content: "";}.leaflet-tooltip-bottom {margin-top: 6px;}.leaflet-tooltip-top {margin-top: -6px;}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before {left: 50%;margin-left: -6px;}.leaflet-tooltip-top:before {bottom: 0;margin-bottom: -12px;border-top-color: #fff;}.leaflet-tooltip-bottom:before {top: 0;margin-top: -12px;margin-left: -6px;border-bottom-color: #fff;}.leaflet-tooltip-left {margin-left: -6px;}.leaflet-tooltip-right {margin-left: 6px;}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before {top: 50%;margin-top: -6px;}.leaflet-tooltip-left:before {right: 0;margin-right: -12px;border-left-color: #fff;}.leaflet-tooltip-right:before {left: 0;margin-left: -12px;border-right-color: #fff;}</style>
 <script>/* @preserve
  * Leaflet 1.3.1+Detached: ba6f97fff8647e724e4dfe66d2ed7da11f908989.ba6f97f, a JS library for interactive maps. http://leafletjs.com
@@ -5892,16 +5901,785 @@ p1</code></pre>
   distinct(Location, Latitude, Longitude) %&gt;% 
   drop_na()</code></pre>
 <pre class="r"><code>datatable(locations)</code></pre>
-<div id="htmlwidget-024090e7f154cf81002b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-024090e7f154cf81002b">{"x":{"filter":"none","data":[["1","4","6","7","8","9","10","12","13","14","15","18","20","23","27","29","30","35","36","37","38","43","45","46","50","57","58","60","62","70","74","76","77","78","79","80","84","85","87","88","89","91","92","97","99","101","102","103","104","106","109","111","116","118","119","122","129","130","133","134","136","137","138","139","140","141","142","147"],["Akalura Creek","Anvik River","Ayakulik River","Bear Creek","Bear River","Big Bay Creek","Big Kitoi Creek","Black Lake","Buskin River","Chelatna Lake","Chignik River","Coghill River","Crescent River","Dog Salmon Creek","Eagle Sonar (Yukon/Canadian Border)","Egegik River","Eshamy River","Frazer Lake","Frosty Creek","George River","Goodnews River (Middle Fork)","Horse Marine Stream","Igushik River","Ilnik River","Judd Lake","Kanektok River","Karluk","Kasilof River","Kenai River","Kogrukluk River","Kvichak River","Lake Louise","Larson Lake","Litnik","Little Kitoi","Little River","Little Waterfall","Malina Creek","McLees","Middle Lagoon","Miles Lake","Morris Cove","Mortensens Creek","Naknek River","Nelson River","Nushagak River","Orzinski River","Pasagshak River","Pauls Bay","Pilot Station Sonar","Portage","Red Lake","Salmon River (Aniak)","Saltery Creek","Sandy River","Seal Bay Creek","Sturgeon River","Summer Bay","Takotna River","Tatlawiksuk River","Telaquana River","Thin Point Cove","Thorsheim","Togiak River","Uganik River","Ugashik River","Upper Station","Wood River"],[57.1641,62.7,57.1956,56.0389,56.0389,58.5426,58.1915,56.392,57.7768,62.4731,56.2623,61.0726,60.2252,57.1289,64.8,58.2461,60.4528,57.2027,55.1944,61.9,59.1,57.112,58.7132,55.8141,61.5706,59.8,57.563,60.3865,60.548,60.8,58.7969,57.7605,62.3387,58.0815,58.1963,57.7784,58.3955,58.173,54.0002,55.0827,60.6798,53.9167,55.1469,58.7173,55.8141,58.8677,55.731,57.4734,58.3898,62,56.2896,57.2648,61.1,57.5263,56.2163,58.3388,57.3388,53.8963,63,61.9,61.1,55.0109,58.2765,59.0722,57.6696,57.4881,57.0581,59.0523],[-154.2287,-160.2,-154.529,-160.2734,-160.2734,-152.5683,-152.3754,-158.937,-152.5372,-151.4545,-158.7054,-147.9109,-152.5585,-154.0287,-141,-157.6254,-148.1,-154.0573,-162.8535,-157.7,-161.5,-153.95,-158.8739,-161.2349,-151.5575,-161.9,-154.3843,-151.3001,-151.2642,-157.8,-157.0993,-152.5055,-149.892,-152.8286,-152.3681,-153.6666,-152.5058,-153.2158,-166.7281,-163.2164,-144.6684,-166.463,-162.6372,-157.053,-161.2349,-158.605,-160.0934,-152.4627,-152.3405,-162.9,-152.4284,-154.3573,-159.2,-152.7619,-160.055,-152.2238,-154.6931,-166.4596,-155.6,-156.2,-154.4,-162.6734,-152.8367,-160.3363,-153.3737,-157.5958,-154.3569,-158.4141]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Location<\/th>\n      <th>Latitude<\/th>\n      <th>Longitude<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-75c0de70a2eda0de1bf4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-75c0de70a2eda0de1bf4">{"x":{"filter":"none","data":[["1","4","6","7","8","9","10","12","13","14","15","18","20","23","27","29","30","35","36","37","38","43","45","46","50","57","58","60","62","70","74","76","77","78","79","80","84","85","87","88","89","91","92","97","99","101","102","103","104","106","109","111","116","118","119","122","129","130","133","134","136","137","138","139","140","141","142","147"],["Akalura Creek","Anvik River","Ayakulik River","Bear Creek","Bear River","Big Bay Creek","Big Kitoi Creek","Black Lake","Buskin River","Chelatna Lake","Chignik River","Coghill River","Crescent River","Dog Salmon Creek","Eagle Sonar (Yukon/Canadian Border)","Egegik River","Eshamy River","Frazer Lake","Frosty Creek","George River","Goodnews River (Middle Fork)","Horse Marine Stream","Igushik River","Ilnik River","Judd Lake","Kanektok River","Karluk","Kasilof River","Kenai River","Kogrukluk River","Kvichak River","Lake Louise","Larson Lake","Litnik","Little Kitoi","Little River","Little Waterfall","Malina Creek","McLees","Middle Lagoon","Miles Lake","Morris Cove","Mortensens Creek","Naknek River","Nelson River","Nushagak River","Orzinski River","Pasagshak River","Pauls Bay","Pilot Station Sonar","Portage","Red Lake","Salmon River (Aniak)","Saltery Creek","Sandy River","Seal Bay Creek","Sturgeon River","Summer Bay","Takotna River","Tatlawiksuk River","Telaquana River","Thin Point Cove","Thorsheim","Togiak River","Uganik River","Ugashik River","Upper Station","Wood River"],[57.1641,62.7,57.1956,56.0389,56.0389,58.5426,58.1915,56.392,57.7768,62.4731,56.2623,61.0726,60.2252,57.1289,64.8,58.2461,60.4528,57.2027,55.1944,61.9,59.1,57.112,58.7132,55.8141,61.5706,59.8,57.563,60.3865,60.548,60.8,58.7969,57.7605,62.3387,58.0815,58.1963,57.7784,58.3955,58.173,54.0002,55.0827,60.6798,53.9167,55.1469,58.7173,55.8141,58.8677,55.731,57.4734,58.3898,62,56.2896,57.2648,61.1,57.5263,56.2163,58.3388,57.3388,53.8963,63,61.9,61.1,55.0109,58.2765,59.0722,57.6696,57.4881,57.0581,59.0523],[-154.2287,-160.2,-154.529,-160.2734,-160.2734,-152.5683,-152.3754,-158.937,-152.5372,-151.4545,-158.7054,-147.9109,-152.5585,-154.0287,-141,-157.6254,-148.1,-154.0573,-162.8535,-157.7,-161.5,-153.95,-158.8739,-161.2349,-151.5575,-161.9,-154.3843,-151.3001,-151.2642,-157.8,-157.0993,-152.5055,-149.892,-152.8286,-152.3681,-153.6666,-152.5058,-153.2158,-166.7281,-163.2164,-144.6684,-166.463,-162.6372,-157.053,-161.2349,-158.605,-160.0934,-152.4627,-152.3405,-162.9,-152.4284,-154.3573,-159.2,-152.7619,-160.055,-152.2238,-154.6931,-166.4596,-155.6,-156.2,-154.4,-162.6734,-152.8367,-160.3363,-153.3737,-157.5958,-154.3569,-158.4141]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Location<\/th>\n      <th>Latitude<\/th>\n      <th>Longitude<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>row.names(locations) &lt;- NULL
+knitr::kable(locations, &quot;html&quot;) %&gt;% 
+  kableExtra::kable_styling(bootstrap_options = &quot;striped&quot;,
+                            position = &quot;center&quot;)</code></pre>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Location
+</th>
+<th style="text-align:right;">
+Latitude
+</th>
+<th style="text-align:right;">
+Longitude
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Akalura Creek
+</td>
+<td style="text-align:right;">
+57.1641
+</td>
+<td style="text-align:right;">
+-154.2287
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Anvik River
+</td>
+<td style="text-align:right;">
+62.7000
+</td>
+<td style="text-align:right;">
+-160.2000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ayakulik River
+</td>
+<td style="text-align:right;">
+57.1956
+</td>
+<td style="text-align:right;">
+-154.5290
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bear Creek
+</td>
+<td style="text-align:right;">
+56.0389
+</td>
+<td style="text-align:right;">
+-160.2734
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bear River
+</td>
+<td style="text-align:right;">
+56.0389
+</td>
+<td style="text-align:right;">
+-160.2734
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Big Bay Creek
+</td>
+<td style="text-align:right;">
+58.5426
+</td>
+<td style="text-align:right;">
+-152.5683
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Big Kitoi Creek
+</td>
+<td style="text-align:right;">
+58.1915
+</td>
+<td style="text-align:right;">
+-152.3754
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Black Lake
+</td>
+<td style="text-align:right;">
+56.3920
+</td>
+<td style="text-align:right;">
+-158.9370
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Buskin River
+</td>
+<td style="text-align:right;">
+57.7768
+</td>
+<td style="text-align:right;">
+-152.5372
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Chelatna Lake
+</td>
+<td style="text-align:right;">
+62.4731
+</td>
+<td style="text-align:right;">
+-151.4545
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Chignik River
+</td>
+<td style="text-align:right;">
+56.2623
+</td>
+<td style="text-align:right;">
+-158.7054
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Coghill River
+</td>
+<td style="text-align:right;">
+61.0726
+</td>
+<td style="text-align:right;">
+-147.9109
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crescent River
+</td>
+<td style="text-align:right;">
+60.2252
+</td>
+<td style="text-align:right;">
+-152.5585
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dog Salmon Creek
+</td>
+<td style="text-align:right;">
+57.1289
+</td>
+<td style="text-align:right;">
+-154.0287
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Eagle Sonar (Yukon/Canadian Border)
+</td>
+<td style="text-align:right;">
+64.8000
+</td>
+<td style="text-align:right;">
+-141.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Egegik River
+</td>
+<td style="text-align:right;">
+58.2461
+</td>
+<td style="text-align:right;">
+-157.6254
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Eshamy River
+</td>
+<td style="text-align:right;">
+60.4528
+</td>
+<td style="text-align:right;">
+-148.1000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frazer Lake
+</td>
+<td style="text-align:right;">
+57.2027
+</td>
+<td style="text-align:right;">
+-154.0573
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frosty Creek
+</td>
+<td style="text-align:right;">
+55.1944
+</td>
+<td style="text-align:right;">
+-162.8535
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+George River
+</td>
+<td style="text-align:right;">
+61.9000
+</td>
+<td style="text-align:right;">
+-157.7000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Goodnews River (Middle Fork)
+</td>
+<td style="text-align:right;">
+59.1000
+</td>
+<td style="text-align:right;">
+-161.5000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Horse Marine Stream
+</td>
+<td style="text-align:right;">
+57.1120
+</td>
+<td style="text-align:right;">
+-153.9500
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Igushik River
+</td>
+<td style="text-align:right;">
+58.7132
+</td>
+<td style="text-align:right;">
+-158.8739
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ilnik River
+</td>
+<td style="text-align:right;">
+55.8141
+</td>
+<td style="text-align:right;">
+-161.2349
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Judd Lake
+</td>
+<td style="text-align:right;">
+61.5706
+</td>
+<td style="text-align:right;">
+-151.5575
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kanektok River
+</td>
+<td style="text-align:right;">
+59.8000
+</td>
+<td style="text-align:right;">
+-161.9000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Karluk
+</td>
+<td style="text-align:right;">
+57.5630
+</td>
+<td style="text-align:right;">
+-154.3843
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kasilof River
+</td>
+<td style="text-align:right;">
+60.3865
+</td>
+<td style="text-align:right;">
+-151.3001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kenai River
+</td>
+<td style="text-align:right;">
+60.5480
+</td>
+<td style="text-align:right;">
+-151.2642
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kogrukluk River
+</td>
+<td style="text-align:right;">
+60.8000
+</td>
+<td style="text-align:right;">
+-157.8000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kvichak River
+</td>
+<td style="text-align:right;">
+58.7969
+</td>
+<td style="text-align:right;">
+-157.0993
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lake Louise
+</td>
+<td style="text-align:right;">
+57.7605
+</td>
+<td style="text-align:right;">
+-152.5055
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Larson Lake
+</td>
+<td style="text-align:right;">
+62.3387
+</td>
+<td style="text-align:right;">
+-149.8920
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Litnik
+</td>
+<td style="text-align:right;">
+58.0815
+</td>
+<td style="text-align:right;">
+-152.8286
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Little Kitoi
+</td>
+<td style="text-align:right;">
+58.1963
+</td>
+<td style="text-align:right;">
+-152.3681
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Little River
+</td>
+<td style="text-align:right;">
+57.7784
+</td>
+<td style="text-align:right;">
+-153.6666
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Little Waterfall
+</td>
+<td style="text-align:right;">
+58.3955
+</td>
+<td style="text-align:right;">
+-152.5058
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malina Creek
+</td>
+<td style="text-align:right;">
+58.1730
+</td>
+<td style="text-align:right;">
+-153.2158
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+McLees
+</td>
+<td style="text-align:right;">
+54.0002
+</td>
+<td style="text-align:right;">
+-166.7281
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Middle Lagoon
+</td>
+<td style="text-align:right;">
+55.0827
+</td>
+<td style="text-align:right;">
+-163.2164
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Miles Lake
+</td>
+<td style="text-align:right;">
+60.6798
+</td>
+<td style="text-align:right;">
+-144.6684
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Morris Cove
+</td>
+<td style="text-align:right;">
+53.9167
+</td>
+<td style="text-align:right;">
+-166.4630
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mortensens Creek
+</td>
+<td style="text-align:right;">
+55.1469
+</td>
+<td style="text-align:right;">
+-162.6372
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Naknek River
+</td>
+<td style="text-align:right;">
+58.7173
+</td>
+<td style="text-align:right;">
+-157.0530
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nelson River
+</td>
+<td style="text-align:right;">
+55.8141
+</td>
+<td style="text-align:right;">
+-161.2349
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Nushagak River
+</td>
+<td style="text-align:right;">
+58.8677
+</td>
+<td style="text-align:right;">
+-158.6050
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Orzinski River
+</td>
+<td style="text-align:right;">
+55.7310
+</td>
+<td style="text-align:right;">
+-160.0934
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pasagshak River
+</td>
+<td style="text-align:right;">
+57.4734
+</td>
+<td style="text-align:right;">
+-152.4627
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pauls Bay
+</td>
+<td style="text-align:right;">
+58.3898
+</td>
+<td style="text-align:right;">
+-152.3405
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pilot Station Sonar
+</td>
+<td style="text-align:right;">
+62.0000
+</td>
+<td style="text-align:right;">
+-162.9000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Portage
+</td>
+<td style="text-align:right;">
+56.2896
+</td>
+<td style="text-align:right;">
+-152.4284
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Red Lake
+</td>
+<td style="text-align:right;">
+57.2648
+</td>
+<td style="text-align:right;">
+-154.3573
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Salmon River (Aniak)
+</td>
+<td style="text-align:right;">
+61.1000
+</td>
+<td style="text-align:right;">
+-159.2000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Saltery Creek
+</td>
+<td style="text-align:right;">
+57.5263
+</td>
+<td style="text-align:right;">
+-152.7619
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sandy River
+</td>
+<td style="text-align:right;">
+56.2163
+</td>
+<td style="text-align:right;">
+-160.0550
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Seal Bay Creek
+</td>
+<td style="text-align:right;">
+58.3388
+</td>
+<td style="text-align:right;">
+-152.2238
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sturgeon River
+</td>
+<td style="text-align:right;">
+57.3388
+</td>
+<td style="text-align:right;">
+-154.6931
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Summer Bay
+</td>
+<td style="text-align:right;">
+53.8963
+</td>
+<td style="text-align:right;">
+-166.4596
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Takotna River
+</td>
+<td style="text-align:right;">
+63.0000
+</td>
+<td style="text-align:right;">
+-155.6000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tatlawiksuk River
+</td>
+<td style="text-align:right;">
+61.9000
+</td>
+<td style="text-align:right;">
+-156.2000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Telaquana River
+</td>
+<td style="text-align:right;">
+61.1000
+</td>
+<td style="text-align:right;">
+-154.4000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thin Point Cove
+</td>
+<td style="text-align:right;">
+55.0109
+</td>
+<td style="text-align:right;">
+-162.6734
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thorsheim
+</td>
+<td style="text-align:right;">
+58.2765
+</td>
+<td style="text-align:right;">
+-152.8367
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Togiak River
+</td>
+<td style="text-align:right;">
+59.0722
+</td>
+<td style="text-align:right;">
+-160.3363
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Uganik River
+</td>
+<td style="text-align:right;">
+57.6696
+</td>
+<td style="text-align:right;">
+-153.3737
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ugashik River
+</td>
+<td style="text-align:right;">
+57.4881
+</td>
+<td style="text-align:right;">
+-157.5958
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Upper Station
+</td>
+<td style="text-align:right;">
+57.0581
+</td>
+<td style="text-align:right;">
+-154.3569
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wood River
+</td>
+<td style="text-align:right;">
+59.0523
+</td>
+<td style="text-align:right;">
+-158.4141
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="create-an-interactive-map" class="section level1">
 <h1>Create an interactive map</h1>
 <pre class="r"><code>leaflet(locations) %&gt;% 
   addTiles() %&gt;% 
   addMarkers(lng = ~Longitude, lat = ~Latitude, popup = ~Location)</code></pre>
-<div id="htmlwidget-fc8fcc5588fff609bc3e" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-fc8fcc5588fff609bc3e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[57.1641,62.7,57.1956,56.0389,56.0389,58.5426,58.1915,56.392,57.7768,62.4731,56.2623,61.0726,60.2252,57.1289,64.8,58.2461,60.4528,57.2027,55.1944,61.9,59.1,57.112,58.7132,55.8141,61.5706,59.8,57.563,60.3865,60.548,60.8,58.7969,57.7605,62.3387,58.0815,58.1963,57.7784,58.3955,58.173,54.0002,55.0827,60.6798,53.9167,55.1469,58.7173,55.8141,58.8677,55.731,57.4734,58.3898,62,56.2896,57.2648,61.1,57.5263,56.2163,58.3388,57.3388,53.8963,63,61.9,61.1,55.0109,58.2765,59.0722,57.6696,57.4881,57.0581,59.0523],[-154.2287,-160.2,-154.529,-160.2734,-160.2734,-152.5683,-152.3754,-158.937,-152.5372,-151.4545,-158.7054,-147.9109,-152.5585,-154.0287,-141,-157.6254,-148.1,-154.0573,-162.8535,-157.7,-161.5,-153.95,-158.8739,-161.2349,-151.5575,-161.9,-154.3843,-151.3001,-151.2642,-157.8,-157.0993,-152.5055,-149.892,-152.8286,-152.3681,-153.6666,-152.5058,-153.2158,-166.7281,-163.2164,-144.6684,-166.463,-162.6372,-157.053,-161.2349,-158.605,-160.0934,-152.4627,-152.3405,-162.9,-152.4284,-154.3573,-159.2,-152.7619,-160.055,-152.2238,-154.6931,-166.4596,-155.6,-156.2,-154.4,-162.6734,-152.8367,-160.3363,-153.3737,-157.5958,-154.3569,-158.4141],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Akalura Creek","Anvik River","Ayakulik River","Bear Creek","Bear River","Big Bay Creek","Big Kitoi Creek","Black Lake","Buskin River","Chelatna Lake","Chignik River","Coghill River","Crescent River","Dog Salmon Creek","Eagle Sonar (Yukon/Canadian Border)","Egegik River","Eshamy River","Frazer Lake","Frosty Creek","George River","Goodnews River (Middle Fork)","Horse Marine Stream","Igushik River","Ilnik River","Judd Lake","Kanektok River","Karluk","Kasilof River","Kenai River","Kogrukluk River","Kvichak River","Lake Louise","Larson Lake","Litnik","Little Kitoi","Little River","Little Waterfall","Malina Creek","McLees","Middle Lagoon","Miles Lake","Morris Cove","Mortensens Creek","Naknek River","Nelson River","Nushagak River","Orzinski River","Pasagshak River","Pauls Bay","Pilot Station Sonar","Portage","Red Lake","Salmon River (Aniak)","Saltery Creek","Sandy River","Seal Bay Creek","Sturgeon River","Summer Bay","Takotna River","Tatlawiksuk River","Telaquana River","Thin Point Cove","Thorsheim","Togiak River","Uganik River","Ugashik River","Upper Station","Wood River"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[53.8963,64.8],"lng":[-166.7281,-141]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-fc016bb5f7fd26f01a71" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fc016bb5f7fd26f01a71">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[57.1641,62.7,57.1956,56.0389,56.0389,58.5426,58.1915,56.392,57.7768,62.4731,56.2623,61.0726,60.2252,57.1289,64.8,58.2461,60.4528,57.2027,55.1944,61.9,59.1,57.112,58.7132,55.8141,61.5706,59.8,57.563,60.3865,60.548,60.8,58.7969,57.7605,62.3387,58.0815,58.1963,57.7784,58.3955,58.173,54.0002,55.0827,60.6798,53.9167,55.1469,58.7173,55.8141,58.8677,55.731,57.4734,58.3898,62,56.2896,57.2648,61.1,57.5263,56.2163,58.3388,57.3388,53.8963,63,61.9,61.1,55.0109,58.2765,59.0722,57.6696,57.4881,57.0581,59.0523],[-154.2287,-160.2,-154.529,-160.2734,-160.2734,-152.5683,-152.3754,-158.937,-152.5372,-151.4545,-158.7054,-147.9109,-152.5585,-154.0287,-141,-157.6254,-148.1,-154.0573,-162.8535,-157.7,-161.5,-153.95,-158.8739,-161.2349,-151.5575,-161.9,-154.3843,-151.3001,-151.2642,-157.8,-157.0993,-152.5055,-149.892,-152.8286,-152.3681,-153.6666,-152.5058,-153.2158,-166.7281,-163.2164,-144.6684,-166.463,-162.6372,-157.053,-161.2349,-158.605,-160.0934,-152.4627,-152.3405,-162.9,-152.4284,-154.3573,-159.2,-152.7619,-160.055,-152.2238,-154.6931,-166.4596,-155.6,-156.2,-154.4,-162.6734,-152.8367,-160.3363,-153.3737,-157.5958,-154.3569,-158.4141],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Akalura Creek","Anvik River","Ayakulik River","Bear Creek","Bear River","Big Bay Creek","Big Kitoi Creek","Black Lake","Buskin River","Chelatna Lake","Chignik River","Coghill River","Crescent River","Dog Salmon Creek","Eagle Sonar (Yukon/Canadian Border)","Egegik River","Eshamy River","Frazer Lake","Frosty Creek","George River","Goodnews River (Middle Fork)","Horse Marine Stream","Igushik River","Ilnik River","Judd Lake","Kanektok River","Karluk","Kasilof River","Kenai River","Kogrukluk River","Kvichak River","Lake Louise","Larson Lake","Litnik","Little Kitoi","Little River","Little Waterfall","Malina Creek","McLees","Middle Lagoon","Miles Lake","Morris Cove","Mortensens Creek","Naknek River","Nelson River","Nushagak River","Orzinski River","Pasagshak River","Pauls Bay","Pilot Station Sonar","Portage","Red Lake","Salmon River (Aniak)","Saltery Creek","Sandy River","Seal Bay Creek","Sturgeon River","Summer Bay","Takotna River","Tatlawiksuk River","Telaquana River","Thin Point Cove","Thorsheim","Togiak River","Uganik River","Ugashik River","Upper Station","Wood River"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[53.8963,64.8],"lng":[-166.7281,-141]}},"evals":[],"jsHooks":[]}</script>
 <pre class="r"><code>leaflet(locations) %&gt;% 
   addWMSTiles(&quot;https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?&quot;,
               layers = 'GEBCO_LATEST',
@@ -5918,8 +6696,8 @@ p1</code></pre>
                    weight = 0.5,
                    color = &quot;white&quot;,
                    opacity = 1)</code></pre>
-<div id="htmlwidget-0583c5c68d9b2715efa5" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0583c5c68d9b2715efa5">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addWMSTiles","args":["https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",null,null,{"styles":"","format":"image/jpeg","transparent":false,"version":"1.1.1","attribution":"Imagery reproduced from the GEBCO_2014 Grid, version 20150318, www.gebco.net","layers":"GEBCO_LATEST"}]},{"method":"addCircleMarkers","args":[[57.1641,62.7,57.1956,56.0389,56.0389,58.5426,58.1915,56.392,57.7768,62.4731,56.2623,61.0726,60.2252,57.1289,64.8,58.2461,60.4528,57.2027,55.1944,61.9,59.1,57.112,58.7132,55.8141,61.5706,59.8,57.563,60.3865,60.548,60.8,58.7969,57.7605,62.3387,58.0815,58.1963,57.7784,58.3955,58.173,54.0002,55.0827,60.6798,53.9167,55.1469,58.7173,55.8141,58.8677,55.731,57.4734,58.3898,62,56.2896,57.2648,61.1,57.5263,56.2163,58.3388,57.3388,53.8963,63,61.9,61.1,55.0109,58.2765,59.0722,57.6696,57.4881,57.0581,59.0523],[-154.2287,-160.2,-154.529,-160.2734,-160.2734,-152.5683,-152.3754,-158.937,-152.5372,-151.4545,-158.7054,-147.9109,-152.5585,-154.0287,-141,-157.6254,-148.1,-154.0573,-162.8535,-157.7,-161.5,-153.95,-158.8739,-161.2349,-151.5575,-161.9,-154.3843,-151.3001,-151.2642,-157.8,-157.0993,-152.5055,-149.892,-152.8286,-152.3681,-153.6666,-152.5058,-153.2158,-166.7281,-163.2164,-144.6684,-166.463,-162.6372,-157.053,-161.2349,-158.605,-160.0934,-152.4627,-152.3405,-162.9,-152.4284,-154.3573,-159.2,-152.7619,-160.055,-152.2238,-154.6931,-166.4596,-155.6,-156.2,-154.4,-162.6734,-152.8367,-160.3363,-153.3737,-157.5958,-154.3569,-158.4141],5,null,null,{"interactive":true,"className":"","stroke":true,"color":"white","weight":0.5,"opacity":1,"fill":true,"fillColor":"salmon","fillOpacity":1},null,null,["Akalura Creek","Anvik River","Ayakulik River","Bear Creek","Bear River","Big Bay Creek","Big Kitoi Creek","Black Lake","Buskin River","Chelatna Lake","Chignik River","Coghill River","Crescent River","Dog Salmon Creek","Eagle Sonar (Yukon/Canadian Border)","Egegik River","Eshamy River","Frazer Lake","Frosty Creek","George River","Goodnews River (Middle Fork)","Horse Marine Stream","Igushik River","Ilnik River","Judd Lake","Kanektok River","Karluk","Kasilof River","Kenai River","Kogrukluk River","Kvichak River","Lake Louise","Larson Lake","Litnik","Little Kitoi","Little River","Little Waterfall","Malina Creek","McLees","Middle Lagoon","Miles Lake","Morris Cove","Mortensens Creek","Naknek River","Nelson River","Nushagak River","Orzinski River","Pasagshak River","Pauls Bay","Pilot Station Sonar","Portage","Red Lake","Salmon River (Aniak)","Saltery Creek","Sandy River","Seal Bay Creek","Sturgeon River","Summer Bay","Takotna River","Tatlawiksuk River","Telaquana River","Thin Point Cove","Thorsheim","Togiak River","Uganik River","Ugashik River","Upper Station","Wood River"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[53.8963,64.8],"lng":[-166.7281,-141]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4a48419ecdd6cda0c8d0" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4a48419ecdd6cda0c8d0">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addWMSTiles","args":["https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",null,null,{"styles":"","format":"image/jpeg","transparent":false,"version":"1.1.1","attribution":"Imagery reproduced from the GEBCO_2014 Grid, version 20150318, www.gebco.net","layers":"GEBCO_LATEST"}]},{"method":"addCircleMarkers","args":[[57.1641,62.7,57.1956,56.0389,56.0389,58.5426,58.1915,56.392,57.7768,62.4731,56.2623,61.0726,60.2252,57.1289,64.8,58.2461,60.4528,57.2027,55.1944,61.9,59.1,57.112,58.7132,55.8141,61.5706,59.8,57.563,60.3865,60.548,60.8,58.7969,57.7605,62.3387,58.0815,58.1963,57.7784,58.3955,58.173,54.0002,55.0827,60.6798,53.9167,55.1469,58.7173,55.8141,58.8677,55.731,57.4734,58.3898,62,56.2896,57.2648,61.1,57.5263,56.2163,58.3388,57.3388,53.8963,63,61.9,61.1,55.0109,58.2765,59.0722,57.6696,57.4881,57.0581,59.0523],[-154.2287,-160.2,-154.529,-160.2734,-160.2734,-152.5683,-152.3754,-158.937,-152.5372,-151.4545,-158.7054,-147.9109,-152.5585,-154.0287,-141,-157.6254,-148.1,-154.0573,-162.8535,-157.7,-161.5,-153.95,-158.8739,-161.2349,-151.5575,-161.9,-154.3843,-151.3001,-151.2642,-157.8,-157.0993,-152.5055,-149.892,-152.8286,-152.3681,-153.6666,-152.5058,-153.2158,-166.7281,-163.2164,-144.6684,-166.463,-162.6372,-157.053,-161.2349,-158.605,-160.0934,-152.4627,-152.3405,-162.9,-152.4284,-154.3573,-159.2,-152.7619,-160.055,-152.2238,-154.6931,-166.4596,-155.6,-156.2,-154.4,-162.6734,-152.8367,-160.3363,-153.3737,-157.5958,-154.3569,-158.4141],5,null,null,{"interactive":true,"className":"","stroke":true,"color":"white","weight":0.5,"opacity":1,"fill":true,"fillColor":"salmon","fillOpacity":1},null,null,["Akalura Creek","Anvik River","Ayakulik River","Bear Creek","Bear River","Big Bay Creek","Big Kitoi Creek","Black Lake","Buskin River","Chelatna Lake","Chignik River","Coghill River","Crescent River","Dog Salmon Creek","Eagle Sonar (Yukon/Canadian Border)","Egegik River","Eshamy River","Frazer Lake","Frosty Creek","George River","Goodnews River (Middle Fork)","Horse Marine Stream","Igushik River","Ilnik River","Judd Lake","Kanektok River","Karluk","Kasilof River","Kenai River","Kogrukluk River","Kvichak River","Lake Louise","Larson Lake","Litnik","Little Kitoi","Little River","Little Waterfall","Malina Creek","McLees","Middle Lagoon","Miles Lake","Morris Cove","Mortensens Creek","Naknek River","Nelson River","Nushagak River","Orzinski River","Pasagshak River","Pauls Bay","Pilot Station Sonar","Portage","Red Lake","Salmon River (Aniak)","Saltery Creek","Sandy River","Seal Bay Creek","Sturgeon River","Summer Bay","Takotna River","Tatlawiksuk River","Telaquana River","Thin Point Cove","Thorsheim","Togiak River","Uganik River","Ugashik River","Upper Station","Wood River"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[53.8963,64.8],"lng":[-166.7281,-141]}},"evals":[],"jsHooks":[]}</script>
 </div>
 
 
